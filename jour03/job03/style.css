@@ -14,3 +14,85 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
+#row1col1 {
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('1.jpg');
+    
+}
+#row2col1 {
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('4.jpg');
+    
+}
+#row3col1 {
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('7.jpg');
+    
+}
+#row1col2 {
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('2.jpg');
+    
+}
+#row2col2 {
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('5.jpg');
+    
+}
+#row3col2 {
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('8.jpg');
+    
+}
+#row1col3 {
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('3.jpg');
+    
+}
+#row2col3 {
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('6.jpg');
+    
+}
+#empty{
+    width: 479px;
+    height: 479px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    background-image : url('empty.jpg');
+    
+}
