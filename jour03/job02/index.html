@@ -1,0 +1,64 @@
+<!-- Dans cet exercice, six images s’assemblent pour former un arc-en-ciel, il
+vous faudra les mélanger puis les remettre en ordre.
+
+Le but de ce job sera dans un premier temps de créer une balise <button>.
+Cette balise servira à mélanger l’ensemble des images de l’arc-en-ciel.
+
+_2
+
+Par la suite, vous devrez faire en sorte qu’il soit possible de remettre les
+images dans le bon ordre, en utilisant un ou plusieurs conteneurs.
+
+Une fois que les 6 images sont ordonnées, un message s’affiche en dessous :
+Si l'arc-en-ciel est bien reconstitué, le message “Vous avez gagné” s’affiche
+en vert. Sinon, le message “Vous avez perdu” s’affiche en rouge. -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Job 02</title>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>        
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="script.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <main>
+            <button id="Shuffle", zindex>SHUFFLE</button>
+            <button id="Check">CHECK</button>
+            <div id = "finalContainer">
+                <div id ="position1", class="ui-widget-header"></div>
+                <div id ="position2", class="ui-widget-header"></div>
+                <div id ="position3", class="ui-widget-header"></div>
+                <div id ="position4", class="ui-widget-header"></div>
+                <div id ="position5", class="ui-widget-header"></div>
+                <div id ="position6", class="ui-widget-header"></div>
+            </div>
+            
+
+            <div id = "initialContainer">
+                <div id = "image4", class="ui-widget-content">
+                    <img src="arc4.png">
+                </div>
+                <div id = "image1", class="ui-widget-content" >
+                    <img src="arc1.png">
+                </div>
+                <div id = "image6",class="ui-widget-content">
+                    <img src="arc6.png">
+                </div>
+                <div id = "image2", class="ui-widget-content">
+                    <img src="arc2.png">
+                </div>
+                <div id = "image5", class="ui-widget-content">
+                    <img src="arc5.png">
+                </div>
+                <div id = "image3",class="ui-widget-content">
+                    <img src="arc3.png">
+                </div>
+            </div>
+            <div id="result"></div>
+
+        </main>
+        <footer></footer>
+    </body>
+</html>

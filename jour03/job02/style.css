@@ -1,0 +1,59 @@
+#finalContainer {
+    width: 798px;
+    height: 399px;
+    border: 1px solid black;
+    display: inline-flex;
+    margin-top: 50px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#initialContainer {
+    display:inline-flex;
+}
+
+#position1{
+    width: 133px;
+    height: 399px;
+    margin: 4px;
+}
+#position2{
+    width: 133px;
+    height: 399px;
+    margin: 4px;
+}
+#position3{
+    width: 133px;
+    height: 399px;
+    margin: 4px;
+}
+#position4{
+    width: 133px;
+    height: 399px;
+    margin: 4px;
+}
+#position5{
+    width: 133px;
+    height: 399px;
+    margin: 4px;
+}
+#position6{
+    width: 133px;
+    height: 399px;
+    margin: 4px;
+}
+
+#button{
+    position: fixed;
+    z-index: 1;
+}
+
+#shuffle{
+    position: fixed;
+    z-index: 1;
+}
+
+
+#result{
+    color: black;
+}
