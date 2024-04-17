@@ -1,0 +1,16 @@
+#game{
+    width: 1437px;
+    height: 1437px;
+    display: inline-flex;
+    margin-top: 0px;
+    margin-left: 0px;
+    border: 0px;
+    background-color: black;
+    padding: 0px;
+    line-height: 0px;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
