@@ -29,8 +29,8 @@ $(document).ready(function(){
                         <br> Type: ${pokemon.type[0]}
                         <p></p>
                         <br> Base: 
-                        <br> &emsp;&emsp; HP: ${pokemon.base.HP}
-                        <br> &emsp;&emsp; Attack: ${pokemon.base.Attack}
+                        <br> &emsp;&emsp; HP: ${pokemon.base.HP}'
+                        <br> &emsp;&emsp; Attack: ${pokemon.base.Attack}'
                         <br> &emsp;&emsp; Defense: ${pokemon.base.Defense}
                         <br> &emsp;&emsp; Sp. Attack: ${pokemon.base["Sp. Attack"]}
                         <br> &emsp;&emsp; Sp. Defense: ${pokemon.base["Sp. Defense"]}
