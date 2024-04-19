@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job01</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>        
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <form> 
+        <input type="text" id="first_name" placeholder="First Name" required>
+        <p id="first_name_error">&emsp;The First Name is too short</p>
+        <input type="text" id="last_name" placeholder="Last Name" required>
+        <p id="last_name_error">&emsp;The Last Name is too short</p>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" min="8" required pattern="^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{7,}$">
+        <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+        <input type="text" id="address" placeholder="Address" required>
+        <input type="text" id="postal_code" placeholder="Postal Code" required>
+        <input type="button" id="register" onclick="register()" value="Register"></button>
+    </form>
+    <div id="result"></div>
+</html>

@@ -1,0 +1,43 @@
+.invalid {
+    border: 1px solid red;
+}
+
+input {
+    width: 450px;
+    padding: 12px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    margin: 10px;
+    position: static;
+}
+
+#password {
+    width: 47%;
+}
+
+#confirm_password {
+    width: 47%;
+}
+
+#register {
+    width: 20%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#first_name {
+    margin-bottom: -10px;;
+}
+#first_name_error {
+    color: white;
+
+}
+#last_name {
+    margin-bottom: -10px;
+    margin-top: 0px;
+}
