@@ -8,8 +8,30 @@ $(document).ready(function(){
     const address = $('#address');
     const postalCode = $('#postal_code');
 
+    // Redirect to registration page
+    function redirectToRegistration() {
+        window.location.href = 'registration.html';
+    }
+    // Redirect to connection page
+    function redirectToConnection() {
+        window.location.href = 'connection.html';
+    }
+    // Empty inputs of connection page
+    function emptyInputsConnection() {
+        email.val('');
+        password.val('');
+    }
+    // Empty inputs of registration page
+    function emptyInputsRegistration() {
+        firstName.val('');
+        lastName.val('');
+        email.val('');
+        password.val('');
+        passwordConfirm.val('');
+        address.val('');
+        postalCode.val('');
+    }
 
-    
     const setErrorFor = (input, message) => {
         const formControl = input.closest('.input');
         const errorDisplay = formControl.find('.error');
@@ -19,7 +41,7 @@ $(document).ready(function(){
             formControl.addClass('error').removeClass('success');
         }
     }
-    
+
     const setSuccessFor = (input) => {
         const formControl = input.parent();
         const errorDisplay = formControl.find('.error');
@@ -30,12 +52,12 @@ $(document).ready(function(){
             formControl.removeClass('error').addClass('success');
         }
     }
-    
+    // Check if email is valid
     const isEmail = (email) => {
         const re = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
         return re.test(String(email).toLowerCase());
     }
-
+    // Hash password
     async function hashPassword(password) {
         const encoder = new TextEncoder();
         const data = encoder.encode(password);
@@ -43,7 +65,7 @@ $(document).ready(function(){
         const hashedPassword = Array.prototype.map.call(new Uint8Array(hash), x => ('00' + x.toString(16)).slice(-2)).join('');
         return hashedPassword;
       }
-
+    // Check inputs if they are valid or not
     async function checkInputs() {
         const firstNameValue = firstName.val().trim();
         const lastNameValue = lastName.val().trim();
@@ -157,10 +179,77 @@ $(document).ready(function(){
             return;
         }
     }
+    // Create account and store it in local storage
+    async function createAccount() {
+        const userAccount = {
+            first_name: firstName.val().trim(),
+            last_name: lastName.val().trim(),
+            email: email.val().trim(),
+            password: await hashPassword(password.val().trim()),
+            address: address.val().trim(),
+            postal_code: postalCode.val().trim()
+        };
 
+        const userAccountJSON = JSON.stringify(userAccount);
+        localStorage.setItem('userAccount', userAccountJSON);
+        console.log('User Account created successfully')
+        console.log(userAccount);
+    }
+    // Print user accounts stored in local storage -- for testing purposes. Local storage is not a database and saves only one account at a time
+    function printUserAccounts() {
+        const userAccounts = [];
+      
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.includes('userAccount')) {
+            const userAccount = JSON.parse(localStorage.getItem(key));
+            userAccounts.push(userAccount);
+          }
+        }
+      
+        console.log(userAccounts);
+      }
+    // Check credentials of the user account in local storage and compare them with the inputs of the connection page
+    async function checkCredentials(){
+        const emailValue = email.val().trim();
+        const passwordValue = password.val().trim();
+        const userAccount = JSON.parse(localStorage.getItem('userAccount'));
+
+        if(userAccount.email != emailValue && userAccount.password != await hashPassword(passwordValue)) {
+            setErrorFor(email, 'Account does not exist');
+            emptyInputsConnection();
+            alert('Account does not exist, click on the Register button to create an account');
+            return;
+        }
+        if(userAccount.email == emailValue && userAccount.password == await hashPassword(passwordValue)) {
+            console.log('Credentials are correct');
+            alert('Credentials are correct');
+            emptyInputsConnection();
+        } else if (userAccount.email != emailValue && userAccount.password == await hashPassword(passwordValue)){
+            setErrorFor(email, 'Invalid email');
+        }
+        else if (userAccount.email == emailValue && userAccount.password != await hashPassword(passwordValue)){
+            setErrorFor(password, 'Invalid password');
+        }
+        else {
+            setErrorFor(email, 'Invalid email and password');
+        }
+    }
+    // Register button event listener: check inputs, create account, alert message, empty inputs, redirect to connection page
     $('#register').on('click', async function(e) {
         e.preventDefault();
         await checkInputs();
-        
+        await createAccount();
+        alert('Account created successfully');
+        emptyInputsRegistration();
+        redirectToConnection();
     });
+    // Redirect to registration page
+    $('#register_redirect').on('click', redirectToRegistration);
+    // Connection button event listener: check credentials
+    $('#connection').on('click', async function(e) {
+        e.preventDefault();
+        await checkCredentials();
+    });
+    printUserAccounts();
 });

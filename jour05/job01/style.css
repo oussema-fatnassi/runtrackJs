@@ -32,3 +32,16 @@ input {
     border-radius: 4px;
     cursor: pointer;
 }
+#register_redirect {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#connection {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}

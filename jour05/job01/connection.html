@@ -8,10 +8,18 @@
 </head>
 <body>
     <form>
-        <input type="text" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <input type="checkbox" id="show_password" onclick="showPassword()">Show Password
-        <input type="button" id="connection" onclick="connect()" value="Connection"></button>
+        <h1>Connection</h1>
+        <div class="input">
+            <input type="text" id="email" placeholder="Email">
+            <div class="error"></div>
+        </div>
+        <div class="input">
+            <input type="password" id="password" placeholder="Password">
+            <div class="error"></div>
+        </div>
+
+        <input type="button" id="connection"  value="Connection"></button>
+        <input type="button" id="register_redirect" value="Register"></button>
     </form>
     <div id="result"></div>
 </html>
