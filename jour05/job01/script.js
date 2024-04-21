@@ -170,7 +170,7 @@ $(document).ready(function(){
         }
     }   
      // Create account and store it in IndexedDB
-    async function createAccount() {
+     async function createAccount() {
         const userAccount = {
             first_name: firstName.val().trim(),
             last_name: lastName.val().trim(),
@@ -179,6 +179,8 @@ $(document).ready(function(){
             address: address.val().trim(),
             postal_code: postalCode.val().trim()
         };
+    
+        let accountCreated = false;
     
         const dbPromise = new Promise((resolve, reject) => {
             const request = indexedDB.open('userAccounts', 1);
@@ -193,12 +195,27 @@ $(document).ready(function(){
                 const transaction = db.transaction(['users'], 'readwrite');
                 const objectStore = transaction.objectStore('users');
     
-                const request = objectStore.add(userAccount);
+                const emailValue = email.val().trim();
+                const request = objectStore.get(emailValue);
                 request.onsuccess = function(event) {
-                    resolve();
+                    const existingAccount = event.target.result;
+                    if (existingAccount) {
+                        alert('Email already exists. Please try a different email.');
+                        reject();
+                    } else {
+                        const request = objectStore.add(userAccount);
+                        request.onsuccess = function(event) {
+                            accountCreated = true;
+                            resolve();
+                        };
+                        request.onerror = function(event) {
+                            console.error('Error adding user account to IndexedDB:', event.target.error);
+                            reject('Failed to add user account to IndexedDB');
+                        };
+                    }
                 };
                 request.onerror = function(event) {
-                    reject('Failed to add user account to IndexedDB');
+                    reject('Failed to get user account from IndexedDB');
                 };
             };
     
@@ -209,14 +226,16 @@ $(document).ready(function(){
     
         try {
             await dbPromise;
-            console.log('User Account created and saved successfully');
-            console.log(userAccount);
+            if (accountCreated) {
+                console.log('User Account created and saved successfully');
+                console.log(userAccount);
+                alert('Account created successfully');
+            }
         } catch (error) {
             console.error(error);
         }
     }
     
-
     // Check credentials of the user account in local storage and compare them with the inputs of the connection page
     async function checkCredentials() {
         const emailValue = email.val().trim();
@@ -241,10 +260,18 @@ $(document).ready(function(){
                         resolve();
                         return;
                     }
+                    if (userAccount.email === emailValue) {
+                        setSuccessFor(email);
+                    }
+                    if (userAccount.password === passwordValue) {
+                        setSuccessFor(password);
+                    }
     
                     if (userAccount.email === emailValue && userAccount.password === passwordValue) {
                         console.log('Credentials are correct');
-                        alert('Credentials are correct');
+                        $('.input').removeClass('success');
+                        alert('You logged in successfully');
+                    
                         emptyInputsConnection();
                     } else if (userAccount.email !== emailValue) {
                         setErrorFor(email, 'Invalid email');
@@ -284,7 +311,6 @@ $(document).ready(function(){
         }
         try {
             await createAccount();
-            alert('Account created successfully');
             emptyInputsRegistration();
             redirectToConnection();
         } catch (error) {
@@ -299,4 +325,6 @@ $(document).ready(function(){
         e.preventDefault();
         await checkCredentials();
     });
+    // Redirect to connection page
+    $('#back_button').on('click', redirectToConnection);
 });
