@@ -8,19 +8,7 @@ $(document).ready(function(){
     const address = $('#address');
     const postalCode = $('#postal_code');
 
-    $('#register').on('click', function(e) {
-        e.preventDefault();
-        checkInputs();
-        var test = JSON.stringify({
-            first_name: firstName.val(),
-            last_name: lastName.val(),
-            email: email.val(),
-            password: password.val(),
-            address: address.val(),
-            postal_code: postalCode.val()
-        });
-        console.log(test);
-    });
+
     
     const setErrorFor = (input, message) => {
         const formControl = input.closest('.input');
@@ -47,6 +35,14 @@ $(document).ready(function(){
         const re = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
         return re.test(String(email).toLowerCase());
     }
+
+    async function hashPassword(password) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hash = await crypto.subtle.digest('SHA-256', data);
+        const hashedPassword = Array.prototype.map.call(new Uint8Array(hash), x => ('00' + x.toString(16)).slice(-2)).join('');
+        return hashedPassword;
+      }
 
     async function checkInputs() {
         const firstNameValue = firstName.val().trim();
@@ -155,8 +151,16 @@ $(document).ready(function(){
 
         try {
             await validatePromise;
+            const hashedPassword = await hashPassword(passwordValue);
+            console.log('Hashed Password: ' + hashedPassword);
         } catch (error) {
             return;
         }
     }
+
+    $('#register').on('click', async function(e) {
+        e.preventDefault();
+        await checkInputs();
+        
+    });
 });
