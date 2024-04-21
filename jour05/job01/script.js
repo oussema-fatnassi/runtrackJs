@@ -7,6 +7,8 @@ $(document).ready(function(){
     const passwordConfirm = $('#confirm_password');
     const address = $('#address');
     const postalCode = $('#postal_code');
+    let eyeIcon1 = $('#img1');
+    let eyeIcon2 = $('#img2');
 
     // Redirect to registration page
     function redirectToRegistration() {
@@ -30,6 +32,28 @@ $(document).ready(function(){
         passwordConfirm.val('');
         address.val('');
         postalCode.val('');
+    }
+
+    function showPassword() {
+        if (password.attr('type') === 'password') {
+            password.attr('type', 'text');
+            eyeIcon1.attr('src', 'images/eye-open.png');
+        } 
+        else {
+            password.attr('type', 'password');
+            eyeIcon1.attr('src', 'images/eye-close.png');
+        }
+    }
+
+    function showConfirmPassword() {
+        if (passwordConfirm.attr('type') === 'password') {
+            passwordConfirm.attr('type', 'text');
+            eyeIcon2.attr('src', 'images/eye-open.png');
+        } 
+        else {
+            passwordConfirm.attr('type', 'password');
+            eyeIcon2.attr('src', 'images/eye-close.png');
+        }
     }
 
     const setErrorFor = (input, message) => {
@@ -300,6 +324,7 @@ $(document).ready(function(){
             console.error(error);
         }
     }
+
     
     // Register button event listener: check inputs, create account, alert message, empty inputs, redirect to connection page
     $('#register').on('click', async function(e) {
@@ -327,4 +352,6 @@ $(document).ready(function(){
     });
     // Redirect to connection page
     $('#back_button').on('click', redirectToConnection);
+    $('#img1').on('click', showPassword);
+    $('#img2').on('click', showConfirmPassword);
 });
