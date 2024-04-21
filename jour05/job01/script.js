@@ -74,100 +74,89 @@ $(document).ready(function(){
         const passwordConfirmValue = passwordConfirm.val().trim();
         const addressValue = address.val().trim();
         const postalCodeValue = postalCode.val().trim();
-
+    
         const validatePromise = new Promise((resolve, reject) => {
+            let isValid = true;
             // First Name
             if(firstNameValue === '') {
                 setErrorFor(firstName, 'First Name cannot be blank');
-                reject();
-            } 
-            else if (firstNameValue.length < 3) {
+                isValid = false;
+            } else if (firstNameValue.length < 3) {
                 setErrorFor(firstName, 'First Name must be at least 3 characters');
-                reject();
-            }
-            else {
+                isValid = false;
+            } else {
                 setSuccessFor(firstName);
-                resolve();
             }
             // Last Name
             if(lastNameValue === '') {
                 setErrorFor(lastName, 'Last Name cannot be blank');
-                reject();
-            } 
-            else if (lastNameValue.length < 3) {
+                isValid = false;
+            } else if (lastNameValue.length < 3) {
                 setErrorFor(lastName, 'Last Name must be at least 3 characters');
-                reject();
-            }
-            else {
+                isValid = false;
+            } else {
                 setSuccessFor(lastName);
-                resolve();
             }
             // Email
             if(emailValue === '') {
                 setErrorFor(email, 'Email cannot be blank');
-                reject();
+                isValid = false;
             } else if (!isEmail(emailValue)) {
                 setErrorFor(email, 'Email is not valid');
-                reject();
+                isValid = false;
             } else {
                 setSuccessFor(email);
-                resolve();
             }
             // Password
             if (passwordValue === '') {
                 setErrorFor(password, 'Password cannot be blank');
-                reject();
-            }
-            else if (passwordValue.length < 8) {
+                isValid = false;
+            } else if (passwordValue.length < 8) {
                 setErrorFor(password, 'Password must be at least 8 characters');
-                reject();
-            }
-            else if (!/[A-Z]/.test(passwordValue)) {
+                isValid = false;
+            } else if (!/[A-Z]/.test(passwordValue)) {
                 setErrorFor(password, 'Password must contain at least one uppercase letter');
-                reject();
-            }
-            else if (!/[a-z]/.test(passwordValue)) {
+                isValid = false;
+            } else if (!/[a-z]/.test(passwordValue)) {
                 setErrorFor(password, 'Password must contain at least one lowercase letter');
-                reject();
-            }
-            else if (!/\d/.test(passwordValue)) {
+                isValid = false;
+            } else if (!/\d/.test(passwordValue)) {
                 setErrorFor(password, 'Password must contain at least one number');
-                reject();
-            }
-            else if (!/[!\"#$%&'()*+,-.\/:;<=>?@[\\\]^_`{|}~]/.test(passwordValue)) {
+                isValid = false;
+            } else if (!/[!\"#$%&'()*+,-.\/:;<=>?@[\\\]^_`{|}~]/.test(passwordValue)) {
                 setErrorFor(password, 'Password must contain at least one special character');
-                reject();
-            }
-            else {
+                isValid = false;
+            } else {
                 setSuccessFor(password);
-                resolve();
             }
             // Password Confirm
             if(passwordConfirmValue === '') {
                 setErrorFor(passwordConfirm, 'Password cannot be blank');
-                reject();
+                isValid = false;
             } else if(passwordValue !== passwordConfirmValue) {
                 setErrorFor(passwordConfirm, 'Passwords do not match');
-                reject();
+                isValid = false;
             } else{
                 setSuccessFor(passwordConfirm);
-                resolve();
             }
             // Address
             if(addressValue === '') {
                 setErrorFor(address, 'Address cannot be blank');
-                reject();
+                isValid = false;
             } else {
                 setSuccessFor(address);
-                resolve();
             }
             // Postal Code
             if(postalCodeValue === '') {
                 setErrorFor(postalCode, 'Postal Code cannot be blank');
-                reject();
+                isValid = false;
             } else {
                 setSuccessFor(postalCode);
+            }
+            if (isValid) {
                 resolve();
+            } else {
+                reject();
             }
         });
 
@@ -175,11 +164,12 @@ $(document).ready(function(){
             await validatePromise;
             const hashedPassword = await hashPassword(passwordValue);
             console.log('Hashed Password: ' + hashedPassword);
+            return true;
         } catch (error) {
-            return;
+            return false;
         }
-    }
-    // Create account and store it in local storage
+    }   
+     // Create account and store it in IndexedDB
     async function createAccount() {
         const userAccount = {
             first_name: firstName.val().trim(),
@@ -189,60 +179,118 @@ $(document).ready(function(){
             address: address.val().trim(),
             postal_code: postalCode.val().trim()
         };
-
-        const userAccountJSON = JSON.stringify(userAccount);
-        localStorage.setItem('userAccount', userAccountJSON);
-        console.log('User Account created successfully')
-        console.log(userAccount);
-    }
-    // Print user accounts stored in local storage -- for testing purposes. Local storage is not a database and saves only one account at a time
-    function printUserAccounts() {
-        const userAccounts = [];
-      
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key.includes('userAccount')) {
-            const userAccount = JSON.parse(localStorage.getItem(key));
-            userAccounts.push(userAccount);
-          }
+    
+        const dbPromise = new Promise((resolve, reject) => {
+            const request = indexedDB.open('userAccounts', 1);
+    
+            request.onupgradeneeded = function(event) {
+                const db = event.target.result;
+                const objectStore = db.createObjectStore('users', { keyPath: 'email' });
+            };
+    
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                const transaction = db.transaction(['users'], 'readwrite');
+                const objectStore = transaction.objectStore('users');
+    
+                const request = objectStore.add(userAccount);
+                request.onsuccess = function(event) {
+                    resolve();
+                };
+                request.onerror = function(event) {
+                    reject('Failed to add user account to IndexedDB');
+                };
+            };
+    
+            request.onerror = function(event) {
+                reject('Failed to open IndexedDB');
+            };
+        });
+    
+        try {
+            await dbPromise;
+            console.log('User Account created and saved successfully');
+            console.log(userAccount);
+        } catch (error) {
+            console.error(error);
         }
-      
-        console.log(userAccounts);
-      }
+    }
+    
+
     // Check credentials of the user account in local storage and compare them with the inputs of the connection page
-    async function checkCredentials(){
+    async function checkCredentials() {
         const emailValue = email.val().trim();
-        const passwordValue = password.val().trim();
-        const userAccount = JSON.parse(localStorage.getItem('userAccount'));
-
-        if(userAccount.email != emailValue && userAccount.password != await hashPassword(passwordValue)) {
-            setErrorFor(email, 'Account does not exist');
-            emptyInputsConnection();
-            alert('Account does not exist, click on the Register button to create an account');
-            return;
-        }
-        if(userAccount.email == emailValue && userAccount.password == await hashPassword(passwordValue)) {
-            console.log('Credentials are correct');
-            alert('Credentials are correct');
-            emptyInputsConnection();
-        } else if (userAccount.email != emailValue && userAccount.password == await hashPassword(passwordValue)){
-            setErrorFor(email, 'Invalid email');
-        }
-        else if (userAccount.email == emailValue && userAccount.password != await hashPassword(passwordValue)){
-            setErrorFor(password, 'Invalid password');
-        }
-        else {
-            setErrorFor(email, 'Invalid email and password');
+        const passwordValue = await hashPassword(password.val().trim());
+    
+        const dbPromise = new Promise((resolve, reject) => {
+            const request = indexedDB.open('userAccounts', 1);
+    
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                const transaction = db.transaction(['users'], 'readonly');
+                const objectStore = transaction.objectStore('users');
+    
+                const getRequest = objectStore.get(emailValue);
+                getRequest.onsuccess = function(event) {
+                    const userAccount = event.target.result;
+    
+                    if (!userAccount) {
+                        setErrorFor(email, 'Account does not exist');
+                        emptyInputsConnection();
+                        alert('Account does not exist, click on the Register button to create an account');
+                        resolve();
+                        return;
+                    }
+    
+                    if (userAccount.email === emailValue && userAccount.password === passwordValue) {
+                        console.log('Credentials are correct');
+                        alert('Credentials are correct');
+                        emptyInputsConnection();
+                    } else if (userAccount.email !== emailValue) {
+                        setErrorFor(email, 'Invalid email');
+                    } else if (userAccount.password !== passwordValue) {
+                        setErrorFor(password, 'Invalid password');
+                    } else {
+                        setErrorFor(email, 'Invalid email and password');
+                    }
+    
+                    resolve();
+                };
+    
+                getRequest.onerror = function(event) {
+                    reject('Failed to get user account from IndexedDB');
+                };
+            };
+    
+            request.onerror = function(event) {
+                reject('Failed to open IndexedDB');
+            };
+        });
+    
+        try {
+            await dbPromise;
+        } catch (error) {
+            console.error(error);
         }
     }
+    
     // Register button event listener: check inputs, create account, alert message, empty inputs, redirect to connection page
     $('#register').on('click', async function(e) {
         e.preventDefault();
-        await checkInputs();
-        await createAccount();
-        alert('Account created successfully');
-        emptyInputsRegistration();
-        redirectToConnection();
+        const isValid = await checkInputs();
+        if (!isValid) {
+            alert('Please fix the errors and try again');
+            return;
+        }
+        try {
+            await createAccount();
+            alert('Account created successfully');
+            emptyInputsRegistration();
+            redirectToConnection();
+        } catch (error) {
+            alert('Failed to create account');
+            console.error(error);
+        }
     });
     // Redirect to registration page
     $('#register_redirect').on('click', redirectToRegistration);
@@ -251,5 +299,4 @@ $(document).ready(function(){
         e.preventDefault();
         await checkCredentials();
     });
-    printUserAccounts();
 });
