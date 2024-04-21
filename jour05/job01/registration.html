@@ -8,17 +8,38 @@
 
 </head>
 <body>
-    <form> 
-        <input type="text" id="first_name" placeholder="First Name" required>
-        <p id="first_name_error">&emsp;The First Name is too short</p>
-        <input type="text" id="last_name" placeholder="Last Name" required>
-        <p id="last_name_error">&emsp;The Last Name is too short</p>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" min="8" required pattern="^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{7,}$">
-        <input type="password" id="confirm_password" placeholder="Confirm Password" required>
-        <input type="text" id="address" placeholder="Address" required>
-        <input type="text" id="postal_code" placeholder="Postal Code" required>
-        <input type="button" id="register" onclick="register()" value="Register"></button>
+    <h1>Registration</h1>
+    <form id="form"> 
+        <div class="input">
+            <input type="text" id="first_name" placeholder="First Name" required>
+            <div class="error"></div>
+        </div>
+        <div class="input">
+            <input type="text" id="last_name" placeholder="Last Name" required>
+            <div class="error"></div>
+        </div>
+        <div class="input">
+            <input type="email" id="email" placeholder="Email" required>
+            <div class="error"></div>
+        </div>
+        <div class="input">
+            <input type="password" id="password" placeholder="Password" min="8">
+            <div class="error"></div>
+        </div>
+        <div class ="input">
+            <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+            <div class="error"></div>
+        </div>
+        <div class="input">
+            <input type="text" id="address" placeholder="Address" required>
+            <div class="error"></div>
+        </div>
+        <div class="input">
+            <input type="text" id="postal_code" placeholder="Postal Code" required>
+            <div class="error"></div>
+        </div>
+        <input type="button" id="register" value="Register">
     </form>
     <div id="result"></div>
+</body>
 </html>
